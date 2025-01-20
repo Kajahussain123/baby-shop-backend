@@ -87,6 +87,7 @@ exports.getCart = async (req, res) => {
         });
 
         res.status(200).json({
+            cartId: cart._id, // Include the cart ID
             cartItems,
             totalPrice, // Overall total price
         });
@@ -94,6 +95,7 @@ exports.getCart = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
 
 
 // Clear cart
