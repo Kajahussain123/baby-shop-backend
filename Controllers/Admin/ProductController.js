@@ -4,7 +4,7 @@ const Category = require('../../Models/Admin/CategoryModel');
 // Add a new product
 exports.addProduct = async (req, res) => {
     try {
-        const { name, description, category, is_offerProduct, is_popularProduct, is_mainProduct, actualPrice, offerPrice, discount, stock, images } = req.body;
+        const { name, description, category, is_offerProduct, is_popularProduct, is_mainProduct, actualPrice, offerPrice, discount, stock, images, sizes } = req.body;
 
         // Validate required fields
         if (!name || !description || !category || !actualPrice || !stock) {
@@ -15,6 +15,11 @@ exports.addProduct = async (req, res) => {
         const foundCategory = await Category.findById(category);
         if (!foundCategory) {
             return res.status(400).json({ message: 'Invalid category' });
+        }
+
+        // Validate sizes (if provided)
+        if (sizes && !Array.isArray(sizes)) {
+            return res.status(400).json({ message: 'Sizes must be an array' });
         }
 
         // Create a new product
@@ -30,6 +35,7 @@ exports.addProduct = async (req, res) => {
             discount,
             stock,
             images: images || [], // Optional images
+            sizes: sizes || [], // Optional sizes
         });
 
         await newProduct.save();
@@ -44,7 +50,7 @@ exports.addProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
     try {
         const products = await Product.find()
-            .populate('category');  // Populate category details
+            .populate('category'); // Populate category details
         res.status(200).json({ products });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
@@ -55,7 +61,7 @@ exports.getProducts = async (req, res) => {
 exports.getProductById = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
-            .populate('category');
+            .populate('category'); // Populate category details
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
@@ -68,7 +74,7 @@ exports.getProductById = async (req, res) => {
 // Edit a product by ID
 exports.updateProduct = async (req, res) => {
     try {
-        const { name, description, category, is_offerProduct, is_popularProduct, is_mainProduct, actualPrice, offerPrice, discount, stock, images } = req.body;
+        const { name, description, category, is_offerProduct, is_popularProduct, is_mainProduct, actualPrice, offerPrice, discount, stock, images, sizes } = req.body;
 
         // Check if product exists
         const product = await Product.findById(req.params.id);
@@ -88,6 +94,7 @@ exports.updateProduct = async (req, res) => {
         product.discount = discount !== undefined ? discount : product.discount;
         product.stock = stock !== undefined ? stock : product.stock;
         product.images = images !== undefined ? images : product.images;
+        product.sizes = sizes !== undefined ? sizes : product.sizes; // Update sizes
 
         await product.save();
 
@@ -97,7 +104,6 @@ exports.updateProduct = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
-
 
 // Delete a product by ID
 exports.deleteProduct = async (req, res) => {

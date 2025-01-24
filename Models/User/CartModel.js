@@ -20,6 +20,10 @@ const cartSchema = new mongoose.Schema({
                 default: 1, // Default quantity is 1
                 min: 1,
             },
+            size: {
+                type: String, // To store the selected size (ageRange)
+                required: false, // Optional if size is not always selected
+            },
         },
     ],
     createdAt: {

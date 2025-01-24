@@ -44,10 +44,24 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    images: [{
-        type: String, // Store image URLs or file paths for product images
-        required: false,
-    }],
+    images: [
+        {
+            type: String, // Store image URLs or file paths for product images
+            required: false,
+        },
+    ],
+    sizes: [
+        {
+            ageRange: {
+                type: String, // e.g., "0-3 months", "3-6 months"
+                required: true,
+            },
+            stock: {
+                type: Number,
+                required: true, // Stock available for this specific size
+            },
+        },
+    ],
     createdAt: {
         type: Date,
         default: Date.now,
