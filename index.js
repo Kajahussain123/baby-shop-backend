@@ -18,6 +18,7 @@ const orderRoutes=require('./Routes/Admin/OrderRoutes')
 const userOrderRoutes=require('./Routes/User/OrderRoutes')
 const userAddressRoutes=require('./Routes/User/AddressRoutes')
 const useradminRoutes=require('./Routes/Admin/UserRoutes')
+const authAdminRoutes=require('./Routes/Admin/AuthRoutes')
 
 
 const app = express();
@@ -50,6 +51,7 @@ app.use('/api/admin/product',productRoutes)
 app.use('/api/admin/carousal',carousalRoutes)
 app.use('/api/admin/order',orderRoutes)
 app.use('/api/admin/users',useradminRoutes)
+app.use('/api/admin/auth',authAdminRoutes)
 
 
 
